@@ -12,8 +12,10 @@ A fast, private SMS app for Android with smart categories, OTP detection and a d
 - **Conversation view** with message bubbles and a reply box
 - **New message** composer, plus `smsto:` / `sms:` link support
 - **Default SMS app support** — optional; when set, incoming and sent messages are stored in the system database
+- **Appearance & Developer screens** — theme, accent colour and project links
+- **Nijatva apps** — soft links to Gallery, Photos, Camera and Files
 - Dark interface, no ads, no trackers, **no internet permission**
-- Lightweight: about 25 KB APK, no third-party libraries
+- Lightweight: about 42 KB APK, no third-party libraries
 
 ## Download
 
@@ -34,6 +36,10 @@ Signing configuration is intentionally omitted — use your own keystore.
 Android only lets the default SMS app write to the message database. Open the app and tap the banner at the top (or the gear icon) to be taken to the system dialog. Nijatva Messages declares all the components Android requires for that role (`SMS_DELIVER`, `WAP_PUSH_DELIVER`, `RESPOND_VIA_MESSAGE` and `SENDTO`).
 
 Without the default role the app still reads existing conversations and can send messages, but sent messages are not stored in the system database.
+
+## The Nijatva family
+
+The app carries the shared Nijatva signature: the Appearance and Developer screens come from the same source as the other Nijatva apps. `NijatvaMediaIntents` provides soft hand-offs to the sibling apps — every call is optional, so a missing app never crashes this one.
 
 ## Permissions
 
