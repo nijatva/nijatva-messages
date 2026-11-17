@@ -1,5 +1,6 @@
 package com.nijatva.signature;
 
+import com.nijatva.messages.NijatvaMediaIntents;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -54,6 +55,7 @@ public class SignatureDeveloperActivity extends SignatureScreenActivity {
         LinearLayout body = SignatureViews.body(this);
         body.addView(profileCard());
         body.addView(maintains());
+        body.addView(familyApps());
 
         root.addView(body);
         scroll.addView(root, new ViewGroup.LayoutParams(
@@ -256,6 +258,45 @@ public class SignatureDeveloperActivity extends SignatureScreenActivity {
     }
 
     /** "Maintains" - the apps that already have a repository, then the planned count. */
+    /** Soft links to the other Nijatva apps (never blocks if they are absent). */
+    private View familyApps() {
+        LinearLayout block = new LinearLayout(this);
+        block.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.topMargin = SignatureViews.dp(this, 22);
+        block.setLayoutParams(params);
+
+        block.addView(SignatureViews.sectionLabel(this, "Nijatva apps"));
+
+        LinearLayout card = SignatureViews.card(this);
+        String[] names = {"Gallery", "Photos", "Camera", "Files"};
+        for (int i = 0; i < names.length; i++) {
+            final int which = i;
+            LinearLayout row = SignatureViews.row(this, SignatureIcon.SHARE, names[i]);
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openFamilyApp(which);
+                }
+            });
+            card.addView(row);
+        }
+        block.addView(card);
+        block.addView(SignatureViews.note(this,
+                "Opens the matching Nijatva app when it is installed."));
+        return block;
+    }
+
+    private void openFamilyApp(int which) {
+        switch (which) {
+            case 0: NijatvaMediaIntents.openGallery(this); break;
+            case 1: NijatvaMediaIntents.openPhotos(this); break;
+            case 2: NijatvaMediaIntents.openCamera(this); break;
+            default: NijatvaMediaIntents.openFileManager(this); break;
+        }
+    }
+
     private View maintains() {
         LinearLayout block = new LinearLayout(this);
         block.setOrientation(LinearLayout.VERTICAL);

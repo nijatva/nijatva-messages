@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1 — 17 November 2026
+
+- Added the Nijatva family media helper (`NijatvaMediaIntents`)
+- New "Nijatva apps" section on the Developer screen (Gallery, Photos, Camera, Files)
+
 ## 1.0 — 17 November 2026
 
 First public release.
