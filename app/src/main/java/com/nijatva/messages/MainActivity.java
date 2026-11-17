@@ -1,6 +1,8 @@
 package com.nijatva.messages;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -30,6 +32,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.nijatva.signature.Signature;
+import com.nijatva.signature.SignatureTheme;
+
 /** Conversation list with categories (All / Personal / OTP / Others) and search. */
 public class MainActivity extends Activity {
 
@@ -52,6 +57,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
+        // This app is dark by design, so the signature screens open dark too.
+        SignatureTheme.seedDefault(this, SignatureTheme.DARK, SignatureTheme.GREEN);
         getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(BG));
         setContentView(buildUi());
         if (Build.VERSION.SDK_INT >= 23) {
@@ -229,19 +236,45 @@ public class MainActivity extends Activity {
         }
     }
 
+    /**
+     * The gear opens the app's own settings, which are the two signature screens plus
+     * the one system thing this app cannot set for itself.
+     */
     private void openSettings() {
-        if (!SmsUtils.isDefaultSms(this)) {
-            try {
-                startActivity(new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
-                        .putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, getPackageName()));
-                return;
-            } catch (Exception ignore) {}
-            try {
-                startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS));
-                return;
-            } catch (Exception ignore) {}
+        final boolean isDefault = SmsUtils.isDefaultSms(this);
+        final String[] items = isDefault
+                ? new String[]{"Appearance", "Developer"}
+                : new String[]{"Appearance", "Developer", "Set as default SMS app"};
+        new AlertDialog.Builder(this)
+                .setTitle("Settings")
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            startActivity(Signature.appearance(MainActivity.this));
+                        } else if (which == 1) {
+                            startActivity(Signature.developer(MainActivity.this));
+                        } else {
+                            askToBeDefault();
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void askToBeDefault() {
+        try {
+            startActivity(new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+                    .putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, getPackageName()));
+            return;
+        } catch (Exception ignore) {
         }
-        Toast.makeText(this, "Nijatva Messages is your default SMS app", Toast.LENGTH_SHORT).show();
+        try {
+            startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS));
+            return;
+        } catch (Exception ignore) {
+        }
+        Toast.makeText(this, "Set Nijatva Messages as your default SMS app in Android settings",
+                Toast.LENGTH_SHORT).show();
     }
 
     private void load() {
