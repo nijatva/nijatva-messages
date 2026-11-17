@@ -1,0 +1,28 @@
+Categories:
+  - Phone & SMS
+License: Apache-2.0
+WebSite: https://github.com/vasudev-work/nijatva-messages
+SourceCode: https://github.com/vasudev-work/nijatva-messages
+IssueTracker: https://github.com/vasudev-work/nijatva-messages/issues
+
+AutoName: Nijatva Messages
+Summary: Private SMS app with smart categories and OTP detection
+Description: |-
+    Fast, private SMS app for Android with smart categories (All, Personal, OTP,
+    Others), search, conversation view and a dark interface. No ads, no trackers,
+    no internet permission.
+
+RepoType: git
+Repo: https://github.com/vasudev-work/nijatva-messages.git
+
+Builds:
+  - versionName: '1.0'
+    versionCode: 1
+    commit: v1.0
+    gradle:
+      - yes
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: '1.0'
+CurrentVersionCode: 1
